@@ -297,14 +297,39 @@
         }
 
         .debug-panel {
-            background: rgba(0,0,0,0.3);
+            background: rgba(0,0,0,0.5);
             padding: 15px;
             border-radius: 10px;
             margin-top: 20px;
             font-family: monospace;
             font-size: 12px;
-            max-height: 200px;
+            max-height: 300px;
             overflow-y: auto;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .debug-controls {
+            background: rgba(255,255,255,0.1);
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .debug-btn {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 12px;
+            margin: 0 5px;
+            transition: transform 0.2s;
+        }
+
+        .debug-btn:hover {
+            transform: translateY(-1px);
         }
 
         @media (min-width: 768px) {
@@ -326,7 +351,14 @@
             
             .status-bar {
                 flex-direction: column;
+                gap: 15px;
+            }
+            
+            .status-bar > div {
+                display: flex;
                 gap: 10px;
+                justify-content: center;
+                flex-wrap: wrap;
             }
             
             .metric-value {
@@ -347,9 +379,14 @@
                 <div class="status-dot" id="statusDot"></div>
                 <span id="connectionText">Disconnected</span>
             </div>
-            <button class="connect-btn" id="connectBtn" onclick="connectToTrain()">
-                Connect to Train
-            </button>
+            <div>
+                <button class="connect-btn" id="connectBtn" onclick="connectToTrain()">
+                    Connect to Train
+                </button>
+                <button class="connect-btn" id="debugBtn" onclick="toggleDebug()" style="margin-left: 10px; font-size: 14px; padding: 8px 16px;">
+                    Debug
+                </button>
+            </div>
         </div>
 
         <div class="lap-counter" id="lapCounter">
@@ -487,6 +524,13 @@
         </div>
 
         <div class="debug-panel" id="debugPanel" style="display: none;">
+            <div class="debug-controls">
+                <strong>Debug Controls:</strong><br>
+                <button class="debug-btn" onclick="testLapDetection()">Test Lap</button>
+                <button class="debug-btn" onclick="showStatus()">Show Status</button>
+                <button class="debug-btn" onclick="clearDebugLog()">Clear Log</button>
+                <button class="debug-btn" onclick="toggleDebug()">Hide Debug</button>
+            </div>
             <strong>Debug Log:</strong><br>
             <div id="debugLog"></div>
         </div>
@@ -813,8 +857,44 @@
 
         // Manual lap testing function
         function testLapDetection() {
-            debugLog('Manual lap test triggered');
+            debugLog('🧪 Manual lap test triggered');
             completeLap();
+        }
+
+        // Debug panel controls
+        function toggleDebug() {
+            const debugPanel = document.getElementById('debugPanel');
+            const debugBtn = document.getElementById('debugBtn');
+            
+            if (debugPanel.style.display === 'none') {
+                debugPanel.style.display = 'block';
+                debugBtn.textContent = 'Hide Debug';
+                debugLog('🔍 Debug panel opened');
+            } else {
+                debugPanel.style.display = 'none';
+                debugBtn.textContent = 'Debug';
+            }
+        }
+
+        function showStatus() {
+            debugLog('📊 === CURRENT STATUS ===');
+            debugLog(`🔗 Connected: ${isConnected}`);
+            debugLog(`📏 Distance: ${currentDistance ? currentDistance.toFixed(1) : 'null'} inches`);
+            debugLog(`🏁 Lap: ${lapCount}`);
+            debugLog(`⚡ Speed: ${document.getElementById('speedValue').textContent} in/s`);
+            debugLog(`🌡️ Temperature: ${document.getElementById('tempValue').textContent}°C`);
+            debugLog(`⚡ Voltage: ${document.getElementById('voltageValue').textContent}V`);
+            debugLog(`🔋 Current: ${document.getElementById('currentValue').textContent}A`);
+            debugLog(`💪 Power: ${document.getElementById('powerValue').textContent}W`);
+            debugLog('========================');
+        }
+
+        function clearDebugLog() {
+            const debugLog = document.getElementById('debugLog');
+            if (debugLog) {
+                debugLog.innerHTML = '';
+                debugLog.innerHTML = '<em>Debug log cleared</em><br>';
+            }
         }
 
         function updateLapTimer() {
@@ -1149,26 +1229,10 @@
                 showAlert('Web Bluetooth is not supported on this browser. Please use Chrome on Android or Desktop.', 'warning');
             }
             
-            // Enable debug panel with double-click on header
-            document.querySelector('.header').addEventListener('dblclick', () => {
-                const debugPanel = document.getElementById('debugPanel');
-                debugPanel.style.display = debugPanel.style.display === 'none' ? 'block' : 'none';
-            });
-            
-            // Add keyboard shortcuts for testing
-            document.addEventListener('keydown', (event) => {
-                if (event.key === 'l' || event.key === 'L') {
-                    testLapDetection();
-                    event.preventDefault();
-                }
-                if (event.key === 's' || event.key === 'S') {
-                    debugLog(`Current state - Distance: ${currentDistance}, Lap: ${lapCount}, Speed: ${document.getElementById('speedValue').textContent}`);
-                    event.preventDefault();
-                }
-            });
-            
-            debugLog('Train Monitor App initialized');
-            debugLog('Press L to manually trigger lap, S to show status, double-click header for debug panel');
+            debugLog('🚂 Train Monitor App initialized');
+            debugLog('💡 Click Debug button to show/hide this panel');
+            debugLog('🧪 Use Test Lap button to manually trigger laps');
+            debugLog('📊 Use Show Status button to see current values');
         });
     </script>
 </body>
