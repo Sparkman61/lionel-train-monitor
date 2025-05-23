@@ -379,14 +379,9 @@
                 <div class="status-dot" id="statusDot"></div>
                 <span id="connectionText">Disconnected</span>
             </div>
-            <div>
-                <button class="connect-btn" id="connectBtn" onclick="connectToTrain()">
-                    Connect to Train
-                </button>
-                <button class="connect-btn" id="debugBtn" onclick="toggleDebug()" style="margin-left: 10px; font-size: 14px; padding: 8px 16px;">
-                    Debug
-                </button>
-            </div>
+            <button class="connect-btn" id="connectBtn" onclick="connectToTrain()">
+                Connect to Train
+            </button>
         </div>
 
         <div class="lap-counter" id="lapCounter">
@@ -522,18 +517,6 @@
                 </div>
             </div>
         </div>
-
-        <div class="debug-panel" id="debugPanel" style="display: none;">
-            <div class="debug-controls">
-                <strong>Debug Controls:</strong><br>
-                <button class="debug-btn" onclick="testLapDetection()">Test Lap</button>
-                <button class="debug-btn" onclick="showStatus()">Show Status</button>
-                <button class="debug-btn" onclick="clearDebugLog()">Clear Log</button>
-                <button class="debug-btn" onclick="toggleDebug()">Hide Debug</button>
-            </div>
-            <strong>Debug Log:</strong><br>
-            <div id="debugLog"></div>
-        </div>
     </div>
 
     <script>
@@ -553,6 +536,10 @@
         let isConnected = false;
         let lapCount = 0;
         let currentDistance = 0;
+        let reconnectAttempts = 0;
+        let maxReconnectAttempts = 3;
+        let reconnectInterval = null;
+        let connectionCheckInterval = null;
 
         // Lap timing variables
         let lapStartTime = null;
@@ -590,12 +577,6 @@
         // ===== DEBUG LOGGING =====
         function debugLog(message) {
             console.log(message);
-            const debugLog = document.getElementById('debugLog');
-            if (debugLog) {
-                const timestamp = new Date().toLocaleTimeString();
-                debugLog.innerHTML += `[${timestamp}] ${message}<br>`;
-                debugLog.scrollTop = debugLog.scrollHeight;
-            }
         }
 
         // ===== BLUETOOTH CONNECTION =====
@@ -605,13 +586,41 @@
                 return;
             }
 
+            // Reset reconnection state
+            reconnectAttempts = 0;
+            if (reconnectInterval) {
+                clearInterval(reconnectInterval);
+            }
+
             try {
-                debugLog('Starting Bluetooth connection...');
                 document.getElementById('connectBtn').disabled = true;
                 document.getElementById('connectBtn').textContent = 'Connecting...';
 
-                // Request device with proper service filter
-                debugLog('Requesting Bluetooth device...');
+                // If we already have a device, try to reconnect first
+                if (device && device.gatt) {
+                    try {
+                        console.log('Attempting to reconnect to existing device...');
+                        const server = await device.gatt.connect();
+                        service = await server.getPrimaryService(SERVICE_UUID);
+                        await getCharacteristics();
+                        await startNotifications();
+                        
+                        updateConnectionStatus(true);
+                        startConnectionMonitoring();
+                        
+                        // Dispatch custom event for wake lock
+                        document.dispatchEvent(new Event('connectionestablished'));
+                        
+                        showAlert('Reconnected to TrainMonitor successfully!', 'info');
+                        return;
+                        
+                    } catch (error) {
+                        console.log('Reconnection to existing device failed, requesting new device...');
+                        // Fall through to request new device
+                    }
+                }
+
+                // Request new device
                 device = await navigator.bluetooth.requestDevice({
                     filters: [{ 
                         name: 'TrainMonitor',
@@ -620,35 +629,31 @@
                     optionalServices: [SERVICE_UUID]
                 });
 
-                debugLog(`Device found: ${device.name}`);
-
                 // Add disconnect event handler
                 device.addEventListener('gattserverdisconnected', handleDisconnection);
 
                 // Connect to GATT server with retry logic
-                debugLog('Connecting to GATT server...');
                 const server = await connectWithRetry(device, 3);
 
                 // Get primary service
-                debugLog('Getting primary service...');
                 service = await server.getPrimaryService(SERVICE_UUID);
-                debugLog('Service acquired successfully');
 
                 // Get all characteristics with proper error handling
-                debugLog('Getting characteristics...');
                 await getCharacteristics();
 
                 // Start notifications for all characteristics
-                debugLog('Starting notifications...');
                 await startNotifications();
 
                 updateConnectionStatus(true);
-                debugLog('Connection successful - All systems ready!');
+                startConnectionMonitoring();
+                
+                // Dispatch custom event for wake lock
+                document.dispatchEvent(new Event('connectionestablished'));
+                
                 showAlert('Connected to TrainMonitor successfully!', 'info');
 
             } catch (error) {
-                debugLog(`Connection failed: ${error.name} - ${error.message}`);
-                console.error('Detailed connection error:', error);
+                console.error('Connection failed:', error);
                 
                 let errorMessage = 'Failed to connect to train monitor.';
                 if (error.name === 'NotFoundError') {
@@ -667,12 +672,9 @@
         async function connectWithRetry(device, maxRetries) {
             for (let i = 0; i < maxRetries; i++) {
                 try {
-                    debugLog(`Connection attempt ${i + 1}/${maxRetries}...`);
                     const server = await device.gatt.connect();
-                    debugLog('GATT server connected');
                     return server;
                 } catch (error) {
-                    debugLog(`Connection attempt ${i + 1} failed: ${error.message}`);
                     if (i === maxRetries - 1) throw error;
                     await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second between retries
                 }
@@ -691,11 +693,8 @@
 
             for (const char of characteristicUUIDs) {
                 try {
-                    debugLog(`Getting ${char.name} characteristic...`);
                     characteristics[char.name] = await service.getCharacteristic(char.uuid);
-                    debugLog(`✅ ${char.name} characteristic acquired`);
                 } catch (error) {
-                    debugLog(`❌ Failed to get ${char.name} characteristic: ${error.message}`);
                     throw new Error(`Missing ${char.name} characteristic`);
                 }
             }
@@ -713,12 +712,9 @@
 
             for (const [name, handler] of Object.entries(handlers)) {
                 try {
-                    debugLog(`Starting ${name} notifications...`);
                     await characteristics[name].startNotifications();
                     characteristics[name].addEventListener('characteristicvaluechanged', handler);
-                    debugLog(`✅ ${name} notifications started`);
                 } catch (error) {
-                    debugLog(`❌ Failed to start ${name} notifications: ${error.message}`);
                     throw new Error(`Failed to start ${name} notifications`);
                 }
             }
@@ -755,7 +751,6 @@
 
         function handleSpeed(event) {
             const value = event.target.value.getFloat32(0, true);
-            debugLog(`Speed: ${value.toFixed(2)} in/s`);
             
             document.getElementById('speedValue').textContent = value.toFixed(1);
             updateChart('speed', value);
@@ -766,20 +761,16 @@
         function handleDistance(event) {
             const value = event.target.value.getFloat32(0, true);
             
-            debugLog(`Distance: ${value.toFixed(1)}" (prev: ${currentDistance ? currentDistance.toFixed(1) : 'null'})`);
-            
             // Detect lap completion - Arduino resets distance to 0 when IR sensor triggers
             // Look for significant distance drop (more than 3 inches) OR reset to near 0
             if (currentDistance !== null && currentDistance > 3) {
                 if (value < 1 || (value < currentDistance * 0.3)) {
-                    debugLog(`LAP DETECTED! Distance dropped from ${currentDistance.toFixed(1)} to ${value.toFixed(1)}`);
                     completeLap();
                 }
             }
             
             // Start first lap when movement begins
             if (lapCount === 0 && currentDistance !== null && currentDistance < 1 && value > 1) {
-                debugLog('Starting first lap');
                 startNewLap();
             }
             
@@ -826,7 +817,6 @@
             lapTimerInterval = setInterval(updateLapTimer, 100);
             
             showAlert(`Starting Lap ${lapCount + 1}`, 'info');
-            debugLog(`Starting new lap ${lapCount + 1}`);
         }
 
         function completeLap() {
@@ -838,11 +828,9 @@
                 
                 const timeStr = formatTime(lapTime);
                 showAlert(`Lap ${lapCount} completed in ${timeStr}`, 'info');
-                debugLog(`Lap ${lapCount} completed in ${timeStr}`);
                 
                 updateLapTimeDisplay();
             } else {
-                debugLog(`Lap ${lapCount} completed (no timing data)`);
                 showAlert(`Lap ${lapCount} completed!`, 'info');
             }
             
@@ -1022,9 +1010,90 @@
 
         // ===== CONNECTION MANAGEMENT =====
         function handleDisconnection() {
-            debugLog('Device disconnected');
             updateConnectionStatus(false);
-            showAlert('Disconnected from TrainMonitor', 'warning');
+            showAlert('Connection lost - attempting to reconnect...', 'warning');
+            
+            // Clear any existing reconnect attempts
+            if (reconnectInterval) {
+                clearInterval(reconnectInterval);
+            }
+            
+            // Start auto-reconnect process
+            reconnectAttempts = 0;
+            attemptReconnection();
+        }
+
+        async function attemptReconnection() {
+            if (reconnectAttempts >= maxReconnectAttempts) {
+                showAlert('Unable to reconnect. Please click Connect to try again.', 'warning');
+                updateConnectionStatus(false);
+                return;
+            }
+            
+            reconnectAttempts++;
+            console.log(`Reconnection attempt ${reconnectAttempts}/${maxReconnectAttempts}`);
+            
+            try {
+                if (device && device.gatt) {
+                    // Try to reconnect to existing device
+                    const server = await device.gatt.connect();
+                    service = await server.getPrimaryService(SERVICE_UUID);
+                    await getCharacteristics();
+                    await startNotifications();
+                    
+                    updateConnectionStatus(true);
+                    reconnectAttempts = 0;
+                    
+                    // Dispatch custom event for wake lock
+                    document.dispatchEvent(new Event('connectionestablished'));
+                    
+                    showAlert('Reconnected successfully!', 'info');
+                    
+                } else {
+                    throw new Error('Device reference lost');
+                }
+                
+            } catch (error) {
+                console.log(`Reconnection attempt ${reconnectAttempts} failed:`, error.message);
+                
+                // Wait before next attempt (increasing delay)
+                const delay = reconnectAttempts * 2000; // 2, 4, 6 seconds
+                setTimeout(() => {
+                    if (reconnectAttempts < maxReconnectAttempts) {
+                        attemptReconnection();
+                    }
+                }, delay);
+            }
+        }
+
+        function startConnectionMonitoring() {
+            // Check connection every 5 seconds
+            connectionCheckInterval = setInterval(async () => {
+                if (isConnected && device && device.gatt) {
+                    try {
+                        // Try to read a characteristic to test connection
+                        if (characteristics.voltage) {
+                            const connected = device.gatt.connected;
+                            if (!connected && isConnected) {
+                                console.log('Connection lost detected by monitoring');
+                                handleDisconnection();
+                            }
+                        }
+                    } catch (error) {
+                        console.log('Connection check failed:', error.message);
+                        if (isConnected) {
+                            handleDisconnection();
+                        }
+                    }
+                }
+            }, 5000);
+        }
+
+        function stopConnectionMonitoring() {
+            if (connectionCheckInterval) {
+                clearInterval(connectionCheckInterval);
+                connectionCheckInterval = null;
+            }
         }
 
         function updateConnectionStatus(connected) {
@@ -1043,6 +1112,9 @@
                 connectionText.textContent = 'Disconnected';
                 connectBtn.textContent = 'Connect to Train';
                 connectBtn.disabled = false;
+                
+                // Stop monitoring when disconnected
+                stopConnectionMonitoring();
             }
         }
 
