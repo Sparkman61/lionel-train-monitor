@@ -711,6 +711,8 @@
 
         function handleSpeed(event) {
             const value = event.target.value.getFloat32(0, true);
+            debugLog(`Speed: ${value.toFixed(2)} in/s`);
+            
             document.getElementById('speedValue').textContent = value.toFixed(1);
             updateChart('speed', value);
             updateGauge('speed', value, 0, 10);
@@ -720,19 +722,31 @@
         function handleDistance(event) {
             const value = event.target.value.getFloat32(0, true);
             
-            // Detect lap completion (distance reset to near 0)
-            if (currentDistance > 12 && value < 6) {
-                completeLap();
-            } else if (currentDistance < 6 && value > 6 && lapCount === 0) {
+            debugLog(`Distance: ${value.toFixed(1)}" (prev: ${currentDistance ? currentDistance.toFixed(1) : 'null'})`);
+            
+            // Detect lap completion - Arduino resets distance to 0 when IR sensor triggers
+            // Look for significant distance drop (more than 3 inches) OR reset to near 0
+            if (currentDistance !== null && currentDistance > 3) {
+                if (value < 1 || (value < currentDistance * 0.3)) {
+                    debugLog(`LAP DETECTED! Distance dropped from ${currentDistance.toFixed(1)} to ${value.toFixed(1)}`);
+                    completeLap();
+                }
+            }
+            
+            // Start first lap when movement begins
+            if (lapCount === 0 && currentDistance !== null && currentDistance < 1 && value > 1) {
+                debugLog('Starting first lap');
                 startNewLap();
             }
             
             currentDistance = value;
             
+            // Track maximum distance for this lap
             if (value > lapData.maxDistance) {
                 lapData.maxDistance = value;
             }
             
+            // Update display
             const feet = Math.floor(value / 12);
             const inches = Math.floor(value % 12);
             const distanceText = feet > 0 ? `${feet}ft ${inches}in` : `${inches}in`;
@@ -783,11 +797,24 @@
                 debugLog(`Lap ${lapCount} completed in ${timeStr}`);
                 
                 updateLapTimeDisplay();
+            } else {
+                debugLog(`Lap ${lapCount} completed (no timing data)`);
+                showAlert(`Lap ${lapCount} completed!`, 'info');
             }
             
+            // Reset lap data for new lap
             lapData.distances = [];
             lapData.voltages = [];
             lapData.maxDistance = 0;
+            
+            // Start timing for next lap
+            startNewLap();
+        }
+
+        // Manual lap testing function
+        function testLapDetection() {
+            debugLog('Manual lap test triggered');
+            completeLap();
         }
 
         function updateLapTimer() {
@@ -1128,7 +1155,20 @@
                 debugPanel.style.display = debugPanel.style.display === 'none' ? 'block' : 'none';
             });
             
+            // Add keyboard shortcuts for testing
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'l' || event.key === 'L') {
+                    testLapDetection();
+                    event.preventDefault();
+                }
+                if (event.key === 's' || event.key === 'S') {
+                    debugLog(`Current state - Distance: ${currentDistance}, Lap: ${lapCount}, Speed: ${document.getElementById('speedValue').textContent}`);
+                    event.preventDefault();
+                }
+            });
+            
             debugLog('Train Monitor App initialized');
+            debugLog('Press L to manually trigger lap, S to show status, double-click header for debug panel');
         });
     </script>
 </body>
