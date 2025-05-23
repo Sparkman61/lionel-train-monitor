@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lionel Train Monitor</title>
+    <title>🚂 Lionel Train Monitor</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <style>
         * {
@@ -94,83 +94,6 @@
             transform: none;
         }
 
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-
-        .metric-card {
-            background: rgba(255,255,255,0.15);
-            border-radius: 12px;
-            padding: 15px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
-            transition: transform 0.3s;
-        }
-
-        .metric-card:hover {
-            transform: translateY(-3px);
-        }
-
-        .metric-title {
-            font-size: 0.9rem;
-            opacity: 0.8;
-            margin-bottom: 8px;
-        }
-
-        .metric-value {
-            font-size: 1.8rem;
-            font-weight: bold;
-            margin-bottom: 3px;
-        }
-
-        .metric-unit {
-            font-size: 0.8rem;
-            opacity: 0.7;
-        }
-
-        .charts-container {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-        }
-
-        .chart-card {
-            background: rgba(255,255,255,0.15);
-            border-radius: 15px;
-            padding: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-
-        .chart-title {
-            font-size: 1.3rem;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        .chart-container {
-            position: relative;
-            height: 300px;
-        }
-
-        .warning {
-            background: linear-gradient(45deg, #ff6b6b, #ff4757);
-            padding: 15px;
-            border-radius: 10px;
-            margin: 10px 0;
-            text-align: center;
-            font-weight: bold;
-            animation: flash 1s infinite alternate;
-        }
-
-        @keyframes flash {
-            0% { opacity: 0.8; }
-            100% { opacity: 1; }
-        }
-
         .lap-counter {
             background: linear-gradient(45deg, #feca57, #ff9ff3);
             color: #2f3542;
@@ -199,48 +122,6 @@
         .current-time {
             font-size: 1.1rem;
             color: #2f3640;
-        }
-
-        .export-controls {
-            background: rgba(255,255,255,0.1);
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .export-btn {
-            background: linear-gradient(45deg, #3742fa, #2f3542);
-            border: none;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: transform 0.2s;
-        }
-
-        .export-btn:hover {
-            transform: translateY(-2px);
-        }
-
-        .recording-status {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 14px;
-        }
-
-        .recording-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #ff4757;
-            animation: pulse 1.5s infinite;
         }
 
         .alert-container {
@@ -338,217 +219,97 @@
             font-weight: bold;
         }
 
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .metric-card {
+            background: rgba(255,255,255,0.15);
+            border-radius: 12px;
+            padding: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: transform 0.3s;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .metric-title {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 8px;
+        }
+
+        .metric-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+
+        .metric-unit {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .charts-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .chart-card {
+            background: rgba(255,255,255,0.15);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .chart-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+
+        .warning {
+            background: linear-gradient(45deg, #ff6b6b, #ff4757);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            text-align: center;
+            font-weight: bold;
+            animation: flash 1s infinite alternate;
+        }
+
+        @keyframes flash {
+            0% { opacity: 0.8; }
+            100% { opacity: 1; }
+        }
+
+        .debug-panel {
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
         @media (min-width: 768px) {
             .charts-container {
                 grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        function startNewLap() {
-            currentLapStartTime = Date.now();
-            lapData.distances = [];
-            lapData.voltages = [];
-            lapData.maxDistance = 0;
-            
-            // Start lap timer
-            if (lapTimerInterval) clearInterval(lapTimerInterval);
-            lapTimerInterval = setInterval(updateLapTimer, 100);
-            
-            showAlert(`Starting Lap ${lapCount + 1}`, 'info');
-            console.log(`Starting new lap ${lapCount + 1}`);
-        }
-
-        function completeLap() {
-            lapCount++;
-            
-            if (currentLapStartTime) {
-                const lapTime = Date.now() - currentLapStartTime;
-                lapTimes.push(lapTime);
-                
-                const timeStr = formatTime(lapTime);
-                showAlert(`Lap ${lapCount} completed in ${timeStr}`, 'info');
-                
-                updateLapTimeDisplay();
-            }
-            
-            // Reset lap data for new lap
-            lapData.distances = [];
-            lapData.voltages = [];
-            lapData.maxDistance = 0;
-            
-            console.log(`Lap ${lapCount} completed - resetting voltage/distance correlation data`);
-        }
-
-        function updateLapTimer() {
-            if (currentLapStartTime) {
-                const elapsed = Date.now() - currentLapStartTime;
-                document.getElementById('currentLapTime').textContent = formatTime(elapsed);
-            }
-        }
-
-        function formatTime(milliseconds) {
-            const totalSeconds = Math.floor(milliseconds / 1000);
-            const minutes = Math.floor(totalSeconds / 60);
-            const seconds = totalSeconds % 60;
-            const ms = Math.floor((milliseconds % 1000) / 100);
-            return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${ms}`;
-        }
-
-        function updateLapTimeDisplay() {
-            if (lapTimes.length === 0) return;
-            
-            const bestTime = Math.min(...lapTimes);
-            const avgTime = lapTimes.reduce((a, b) => a + b, 0) / lapTimes.length;
-            
-            document.getElementById('bestLapTime').textContent = formatTime(bestTime);
-            document.getElementById('avgLapTime').textContent = formatTime(avgTime);
-        }
-
-        function updateGauge(type, value, min, max) {
-            const percentage = Math.min(Math.max((value - min) / (max - min), 0), 1);
-            const circumference = 2 * Math.PI * 32; // radius = 32
-            const dashArray = `${percentage * circumference} ${circumference}`;
-            
-            document.getElementById(`${type}GaugeFill`).setAttribute('stroke-dasharray', dashArray);
-            document.getElementById(`${type}GaugeValue`).textContent = value.toFixed(1);
-        }
-
-        function recordDataPoint(metric, value) {
-            const timestamp = new Date();
-            const dataPoint = {
-                timestamp: timestamp,
-                elapsed: timestamp - sessionStartTime,
-                metric: metric,
-                value: value,
-                lap: lapCount,
-                distance: currentDistance || 0
-            };
-            
-            sessionData.push(dataPoint);
-            
-            // Keep only last 1000 data points to prevent memory issues
-            if (sessionData.length > 1000) {
-                sessionData = sessionData.slice(-1000);
-            }
-        }
-
-        function checkPerformanceAlerts(metric, value) {
-            switch(metric) {
-                case 'temperature':
-                    if (value > thresholds.maxTemp) {
-                        showAlert(`Temperature warning: ${value.toFixed(1)}°C`, 'warning');
-                    }
-                    break;
-                case 'voltage':
-                    if (value < thresholds.minVoltage) {
-                        showAlert(`Low voltage: ${value.toFixed(1)}V`, 'warning');
-                    }
-                    break;
-                case 'current':
-                    if (value > thresholds.maxCurrent) {
-                        showAlert(`High current: ${value.toFixed(2)}A`, 'warning');
-                    }
-                    break;
-                case 'power':
-                    if (value > thresholds.maxPower) {
-                        showAlert(`High power consumption: ${value.toFixed(1)}W`, 'warning');
-                    }
-                    break;
-                case 'speed':
-                    if (value < thresholds.minSpeed && lapCount > 0) {
-                        showAlert('Train may be stalled', 'warning');
-                    }
-                    break;
-            }
-        }
-
-        function showAlert(message, type = 'info') {
-            const alertContainer = document.getElementById('alertContainer');
-            const alert = document.createElement('div');
-            alert.className = `alert ${type}`;
-            alert.textContent = message;
-            
-            alertContainer.appendChild(alert);
-            
-            // Remove alert after 5 seconds
-            setTimeout(() => {
-                if (alert.parentNode) {
-                    alert.parentNode.removeChild(alert);
-                }
-            }, 5000);
-        }
-
-        function exportData(format) {
-            if (sessionData.length === 0) {
-                showAlert('No data to export', 'warning');
-                return;
-            }
-            
-            const filename = `train_monitor_${new Date().toISOString().slice(0,19).replace(/:/g, '-')}`;
-            
-            if (format === 'csv') {
-                exportCSV(filename);
-            } else if (format === 'json') {
-                exportJSON(filename);
-            }
-        }
-
-        function exportCSV(filename) {
-            const headers = ['Timestamp', 'Elapsed (ms)', 'Metric', 'Value', 'Lap', 'Distance'];
-            const rows = sessionData.map(point => [
-                point.timestamp.toISOString(),
-                point.elapsed,
-                point.metric,
-                point.value,
-                point.lap,
-                point.distance
-            ]);
-            
-            const csvContent = [headers, ...rows].map(row => row.join(',')).join('\n');
-            downloadFile(csvContent, `${filename}.csv`, 'text/csv');
-            showAlert('CSV data exported successfully', 'info');
-        }
-
-        function exportJSON(filename) {
-            const exportData = {
-                sessionStart: sessionStartTime,
-                lapTimes: lapTimes,
-                totalLaps: lapCount,
-                data: sessionData
-            };
-            
-            const jsonContent = JSON.stringify(exportData, null, 2);
-            downloadFile(jsonContent, `${filename}.json`, 'application/json');
-            showAlert('JSON data exported successfully', 'info');
-        }
-
-        function downloadFile(content, filename, mimeType) {
-            const blob = new Blob([content], { type: mimeType });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = filename;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-        }
-
-        function clearData() {
-            if (confirm('Are you sure you want to clear all recorded data?')) {
-                sessionData = [];
-                lapTimes = [];
-                lapCount = 0;
-                sessionStartTime = new Date();
-                currentLapStartTime = null;
-                if (lapTimerInterval) clearInterval(lapTimerInterval);
-                
-                document.getElementById('currentLapTime').textContent = '00:00';
-                document.getElementById('bestLapTime').textContent = '--:--';
-                document.getElementById('avgLapTime').textContent = '--:--';
-                document.querySelector('.lap-info div').textContent = 'Lap: 0 | Distance: 0 inches';
-                
-                showAlert('All data cleared', 'info');
             }
         }
 
@@ -599,18 +360,6 @@
                 <div class="current-time" id="currentLapTime">00:00</div>
                 <div>Best: <span id="bestLapTime">--:--</span></div>
                 <div>Avg: <span id="avgLapTime">--:--</span></div>
-            </div>
-        </div>
-
-        <div class="export-controls">
-            <div class="recording-status">
-                <div class="recording-dot"></div>
-                <span>Recording Session</span>
-            </div>
-            <div>
-                <button class="export-btn" onclick="exportData('csv')">Export CSV</button>
-                <button class="export-btn" onclick="exportData('json')">Export JSON</button>
-                <button class="export-btn" onclick="clearData()">Clear Data</button>
             </div>
         </div>
 
@@ -736,18 +485,25 @@
                 </div>
             </div>
         </div>
+
+        <div class="debug-panel" id="debugPanel" style="display: none;">
+            <strong>Debug Log:</strong><br>
+            <div id="debugLog"></div>
+        </div>
     </div>
 
     <script>
-        // BLE service and characteristic UUIDs from Arduino code
-        const SERVICE_UUID = '19B10000-E8F2-537E-4F6C-D104768A1214';
-        const VOLTAGE_UUID = '19B10001-E8F2-537E-4F6C-D104768A1214';
-        const CURRENT_UUID = '19B10002-E8F2-537E-4F6C-D104768A1214';
-        const POWER_UUID = '19B10003-E8F2-537E-4F6C-D104768A1214';
-        const SPEED_UUID = '19B10004-E8F2-537E-4F6C-D104768A1214';
-        const DISTANCE_UUID = '19B10005-E8F2-537E-4F6C-D104768A1214';
-        const TEMP_UUID = '19B10006-E8F2-537E-4F6C-D104768A1214';
+        // ===== BLUETOOTH CONFIGURATION =====
+        // Service and characteristic UUIDs (lowercase for Web Bluetooth compatibility)
+        const SERVICE_UUID = '19b10000-e8f2-537e-4f6c-d104768a1214';
+        const VOLTAGE_UUID = '19b10001-e8f2-537e-4f6c-d104768a1214';
+        const CURRENT_UUID = '19b10002-e8f2-537e-4f6c-d104768a1214';
+        const POWER_UUID = '19b10003-e8f2-537e-4f6c-d104768a1214';
+        const SPEED_UUID = '19b10004-e8f2-537e-4f6c-d104768a1214';
+        const DISTANCE_UUID = '19b10005-e8f2-537e-4f6c-d104768a1214';
+        const TEMP_UUID = '19b10006-e8f2-537e-4f6c-d104768a1214';
 
+        // ===== GLOBAL VARIABLES =====
         let device, service;
         let characteristics = {};
         let isConnected = false;
@@ -759,10 +515,6 @@
         let currentLapStartTime = null;
         let lapTimes = [];
         let lapTimerInterval = null;
-
-        // Data recording for export
-        let sessionData = [];
-        let sessionStartTime = new Date();
 
         // Performance thresholds for alerts
         const thresholds = {
@@ -791,6 +543,403 @@
             maxDistance: 0
         };
 
+        // ===== DEBUG LOGGING =====
+        function debugLog(message) {
+            console.log(message);
+            const debugLog = document.getElementById('debugLog');
+            if (debugLog) {
+                const timestamp = new Date().toLocaleTimeString();
+                debugLog.innerHTML += `[${timestamp}] ${message}<br>`;
+                debugLog.scrollTop = debugLog.scrollHeight;
+            }
+        }
+
+        // ===== BLUETOOTH CONNECTION =====
+        async function connectToTrain() {
+            if (!navigator.bluetooth) {
+                showAlert('Bluetooth is not supported on this device/browser. Please use Chrome on Android or a compatible browser.', 'warning');
+                return;
+            }
+
+            try {
+                debugLog('Starting Bluetooth connection...');
+                document.getElementById('connectBtn').disabled = true;
+                document.getElementById('connectBtn').textContent = 'Connecting...';
+
+                // Request device with proper service filter
+                debugLog('Requesting Bluetooth device...');
+                device = await navigator.bluetooth.requestDevice({
+                    filters: [{ 
+                        name: 'TrainMonitor',
+                        services: [SERVICE_UUID]
+                    }],
+                    optionalServices: [SERVICE_UUID]
+                });
+
+                debugLog(`Device found: ${device.name}`);
+
+                // Add disconnect event handler
+                device.addEventListener('gattserverdisconnected', handleDisconnection);
+
+                // Connect to GATT server with retry logic
+                debugLog('Connecting to GATT server...');
+                const server = await connectWithRetry(device, 3);
+
+                // Get primary service
+                debugLog('Getting primary service...');
+                service = await server.getPrimaryService(SERVICE_UUID);
+                debugLog('Service acquired successfully');
+
+                // Get all characteristics with proper error handling
+                debugLog('Getting characteristics...');
+                await getCharacteristics();
+
+                // Start notifications for all characteristics
+                debugLog('Starting notifications...');
+                await startNotifications();
+
+                updateConnectionStatus(true);
+                debugLog('Connection successful - All systems ready!');
+                showAlert('Connected to TrainMonitor successfully!', 'info');
+
+            } catch (error) {
+                debugLog(`Connection failed: ${error.name} - ${error.message}`);
+                console.error('Detailed connection error:', error);
+                
+                let errorMessage = 'Failed to connect to train monitor.';
+                if (error.name === 'NotFoundError') {
+                    errorMessage = 'TrainMonitor device not found. Make sure Arduino is powered on and in range.';
+                } else if (error.name === 'NetworkError') {
+                    errorMessage = 'Connection failed. Try moving closer to the Arduino.';
+                } else if (error.name === 'SecurityError') {
+                    errorMessage = 'Bluetooth access denied. Please allow Bluetooth permissions.';
+                }
+                
+                showAlert(errorMessage, 'warning');
+                updateConnectionStatus(false);
+            }
+        }
+
+        async function connectWithRetry(device, maxRetries) {
+            for (let i = 0; i < maxRetries; i++) {
+                try {
+                    debugLog(`Connection attempt ${i + 1}/${maxRetries}...`);
+                    const server = await device.gatt.connect();
+                    debugLog('GATT server connected');
+                    return server;
+                } catch (error) {
+                    debugLog(`Connection attempt ${i + 1} failed: ${error.message}`);
+                    if (i === maxRetries - 1) throw error;
+                    await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second between retries
+                }
+            }
+        }
+
+        async function getCharacteristics() {
+            const characteristicUUIDs = [
+                { name: 'voltage', uuid: VOLTAGE_UUID },
+                { name: 'current', uuid: CURRENT_UUID },
+                { name: 'power', uuid: POWER_UUID },
+                { name: 'speed', uuid: SPEED_UUID },
+                { name: 'distance', uuid: DISTANCE_UUID },
+                { name: 'temperature', uuid: TEMP_UUID }
+            ];
+
+            for (const char of characteristicUUIDs) {
+                try {
+                    debugLog(`Getting ${char.name} characteristic...`);
+                    characteristics[char.name] = await service.getCharacteristic(char.uuid);
+                    debugLog(`✅ ${char.name} characteristic acquired`);
+                } catch (error) {
+                    debugLog(`❌ Failed to get ${char.name} characteristic: ${error.message}`);
+                    throw new Error(`Missing ${char.name} characteristic`);
+                }
+            }
+        }
+
+        async function startNotifications() {
+            const handlers = {
+                voltage: handleVoltage,
+                current: handleCurrent,
+                power: handlePower,
+                speed: handleSpeed,
+                distance: handleDistance,
+                temperature: handleTemperature
+            };
+
+            for (const [name, handler] of Object.entries(handlers)) {
+                try {
+                    debugLog(`Starting ${name} notifications...`);
+                    await characteristics[name].startNotifications();
+                    characteristics[name].addEventListener('characteristicvaluechanged', handler);
+                    debugLog(`✅ ${name} notifications started`);
+                } catch (error) {
+                    debugLog(`❌ Failed to start ${name} notifications: ${error.message}`);
+                    throw new Error(`Failed to start ${name} notifications`);
+                }
+            }
+        }
+
+        // ===== DATA HANDLERS =====
+        function handleVoltage(event) {
+            const value = event.target.value.getFloat32(0, true);
+            document.getElementById('voltageValue').textContent = value.toFixed(1);
+            updateChart('voltage', value);
+            updateGauge('voltage', value, 0, 20);
+            
+            if (currentDistance !== null) {
+                updateVoltageDistanceCorrelation(currentDistance, value);
+            }
+            
+            checkPerformanceAlerts('voltage', value);
+        }
+
+        function handleCurrent(event) {
+            const value = event.target.value.getFloat32(0, true);
+            document.getElementById('currentValue').textContent = value.toFixed(2);
+            updateChart('current', value);
+            checkPerformanceAlerts('current', value);
+        }
+
+        function handlePower(event) {
+            const value = event.target.value.getFloat32(0, true);
+            document.getElementById('powerValue').textContent = value.toFixed(1);
+            updateChart('power', value);
+            updateGauge('power', value, 0, 50);
+            checkPerformanceAlerts('power', value);
+        }
+
+        function handleSpeed(event) {
+            const value = event.target.value.getFloat32(0, true);
+            document.getElementById('speedValue').textContent = value.toFixed(1);
+            updateChart('speed', value);
+            updateGauge('speed', value, 0, 10);
+            checkPerformanceAlerts('speed', value);
+        }
+
+        function handleDistance(event) {
+            const value = event.target.value.getFloat32(0, true);
+            
+            // Detect lap completion (distance reset to near 0)
+            if (currentDistance > 12 && value < 6) {
+                completeLap();
+            } else if (currentDistance < 6 && value > 6 && lapCount === 0) {
+                startNewLap();
+            }
+            
+            currentDistance = value;
+            
+            if (value > lapData.maxDistance) {
+                lapData.maxDistance = value;
+            }
+            
+            const feet = Math.floor(value / 12);
+            const inches = Math.floor(value % 12);
+            const distanceText = feet > 0 ? `${feet}ft ${inches}in` : `${inches}in`;
+            
+            document.querySelector('.lap-info div').textContent = `Lap: ${lapCount} | Distance: ${distanceText}`;
+        }
+
+        function handleTemperature(event) {
+            const value = event.target.value.getFloat32(0, true);
+            document.getElementById('tempValue').textContent = value.toFixed(1);
+            updateChart('temperature', value);
+            updateGauge('temperature', value, 0, 80);
+            
+            const warning = document.getElementById('tempWarning');
+            if (value > thresholds.maxTemp) {
+                warning.style.display = 'block';
+                showAlert(`High temperature detected: ${value.toFixed(1)}°C`, 'warning');
+            } else {
+                warning.style.display = 'none';
+            }
+            
+            checkPerformanceAlerts('temperature', value);
+        }
+
+        // ===== LAP TIMING =====
+        function startNewLap() {
+            currentLapStartTime = Date.now();
+            lapData.distances = [];
+            lapData.voltages = [];
+            lapData.maxDistance = 0;
+            
+            if (lapTimerInterval) clearInterval(lapTimerInterval);
+            lapTimerInterval = setInterval(updateLapTimer, 100);
+            
+            showAlert(`Starting Lap ${lapCount + 1}`, 'info');
+            debugLog(`Starting new lap ${lapCount + 1}`);
+        }
+
+        function completeLap() {
+            lapCount++;
+            
+            if (currentLapStartTime) {
+                const lapTime = Date.now() - currentLapStartTime;
+                lapTimes.push(lapTime);
+                
+                const timeStr = formatTime(lapTime);
+                showAlert(`Lap ${lapCount} completed in ${timeStr}`, 'info');
+                debugLog(`Lap ${lapCount} completed in ${timeStr}`);
+                
+                updateLapTimeDisplay();
+            }
+            
+            lapData.distances = [];
+            lapData.voltages = [];
+            lapData.maxDistance = 0;
+        }
+
+        function updateLapTimer() {
+            if (currentLapStartTime) {
+                const elapsed = Date.now() - currentLapStartTime;
+                document.getElementById('currentLapTime').textContent = formatTime(elapsed);
+            }
+        }
+
+        function formatTime(milliseconds) {
+            const totalSeconds = Math.floor(milliseconds / 1000);
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            const ms = Math.floor((milliseconds % 1000) / 100);
+            return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${ms}`;
+        }
+
+        function updateLapTimeDisplay() {
+            if (lapTimes.length === 0) return;
+            
+            const bestTime = Math.min(...lapTimes);
+            const avgTime = lapTimes.reduce((a, b) => a + b, 0) / lapTimes.length;
+            
+            document.getElementById('bestLapTime').textContent = formatTime(bestTime);
+            document.getElementById('avgLapTime').textContent = formatTime(avgTime);
+        }
+
+        // ===== VISUAL UPDATES =====
+        function updateGauge(type, value, min, max) {
+            const percentage = Math.min(Math.max((value - min) / (max - min), 0), 1);
+            const circumference = 2 * Math.PI * 32;
+            const dashArray = `${percentage * circumference} ${circumference}`;
+            
+            document.getElementById(`${type}GaugeFill`).setAttribute('stroke-dasharray', dashArray);
+            document.getElementById(`${type}GaugeValue`).textContent = value.toFixed(1);
+        }
+
+        function updateChart(type, value) {
+            const now = new Date().toLocaleTimeString();
+            
+            if (chartData.labels.length === 0 || chartData.labels[chartData.labels.length - 1] !== now) {
+                chartData.labels.push(now);
+                
+                Object.keys(chartData).forEach(key => {
+                    if (key !== 'labels' && chartData[key].length < chartData.labels.length - 1) {
+                        chartData[key].push(0);
+                    }
+                });
+            }
+            
+            chartData[type][chartData.labels.length - 1] = value;
+            
+            if (chartData.labels.length > maxDataPoints) {
+                chartData.labels.shift();
+                Object.keys(chartData).forEach(key => {
+                    if (key !== 'labels') {
+                        chartData[key].shift();
+                    }
+                });
+            }
+            
+            powerChart.update('none');
+            speedTempChart.update('none');
+        }
+
+        function updateVoltageDistanceCorrelation(distance, voltage) {
+            if (distance >= 0 && voltage > 0) {
+                lapData.distances.push(distance);
+                lapData.voltages.push(voltage);
+                
+                voltageDistanceChart.data.datasets[0].data = lapData.distances.map((dist, i) => ({
+                    x: dist,
+                    y: lapData.voltages[i]
+                }));
+                
+                voltageDistanceChart.update('none');
+            }
+        }
+
+        // ===== ALERTS =====
+        function checkPerformanceAlerts(metric, value) {
+            switch(metric) {
+                case 'temperature':
+                    if (value > thresholds.maxTemp) {
+                        showAlert(`Temperature warning: ${value.toFixed(1)}°C`, 'warning');
+                    }
+                    break;
+                case 'voltage':
+                    if (value < thresholds.minVoltage) {
+                        showAlert(`Low voltage: ${value.toFixed(1)}V`, 'warning');
+                    }
+                    break;
+                case 'current':
+                    if (value > thresholds.maxCurrent) {
+                        showAlert(`High current: ${value.toFixed(2)}A`, 'warning');
+                    }
+                    break;
+                case 'power':
+                    if (value > thresholds.maxPower) {
+                        showAlert(`High power consumption: ${value.toFixed(1)}W`, 'warning');
+                    }
+                    break;
+                case 'speed':
+                    if (value < thresholds.minSpeed && lapCount > 0) {
+                        showAlert('Train may be stalled', 'warning');
+                    }
+                    break;
+            }
+        }
+
+        function showAlert(message, type = 'info') {
+            const alertContainer = document.getElementById('alertContainer');
+            const alert = document.createElement('div');
+            alert.className = `alert ${type}`;
+            alert.textContent = message;
+            
+            alertContainer.appendChild(alert);
+            
+            setTimeout(() => {
+                if (alert.parentNode) {
+                    alert.parentNode.removeChild(alert);
+                }
+            }, 5000);
+        }
+
+        // ===== CONNECTION MANAGEMENT =====
+        function handleDisconnection() {
+            debugLog('Device disconnected');
+            updateConnectionStatus(false);
+            showAlert('Disconnected from TrainMonitor', 'warning');
+        }
+
+        function updateConnectionStatus(connected) {
+            isConnected = connected;
+            const statusDot = document.getElementById('statusDot');
+            const connectionText = document.getElementById('connectionText');
+            const connectBtn = document.getElementById('connectBtn');
+
+            if (connected) {
+                statusDot.classList.add('connected');
+                connectionText.textContent = 'Connected to TrainMonitor';
+                connectBtn.textContent = 'Connected';
+                connectBtn.disabled = true;
+            } else {
+                statusDot.classList.remove('connected');
+                connectionText.textContent = 'Disconnected';
+                connectBtn.textContent = 'Connect to Train';
+                connectBtn.disabled = false;
+            }
+        }
+
+        // ===== CHART INITIALIZATION =====
         // Initialize charts
         const powerChart = new Chart(document.getElementById('powerChart'), {
             type: 'line',
@@ -858,59 +1007,6 @@
             }
         });
 
-        const voltageDistanceChart = new Chart(document.getElementById('voltageDistanceChart'), {
-            type: 'scatter',
-            data: {
-                datasets: [{
-                    label: 'Voltage vs Distance',
-                    data: lapData.distances.map((dist, i) => ({ x: dist, y: lapData.voltages[i] })),
-                    backgroundColor: 'rgba(255, 107, 107, 0.6)',
-                    borderColor: '#ff6b6b',
-                    borderWidth: 2,
-                    pointRadius: 4,
-                    pointHoverRadius: 6
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        labels: { color: 'white' }
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return `Distance: ${context.parsed.x.toFixed(1)}" | Voltage: ${context.parsed.y.toFixed(2)}V`;
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        type: 'linear',
-                        position: 'bottom',
-                        title: {
-                            display: true,
-                            text: 'Distance from Lap Start (inches)',
-                            color: 'white'
-                        },
-                        ticks: { color: 'white' },
-                        grid: { color: 'rgba(255,255,255,0.2)' }
-                    },
-                    y: {
-                        title: {
-                            display: true,
-                            text: 'Voltage (V)',
-                            color: 'white'
-                        },
-                        ticks: { color: 'white' },
-                        grid: { color: 'rgba(255,255,255,0.2)' }
-                    }
-                }
-            }
-        });
-
         const speedTempChart = new Chart(document.getElementById('speedTempChart'), {
             type: 'line',
             data: {
@@ -965,230 +1061,74 @@
             }
         });
 
-        async function connectToTrain() {
-            if (!navigator.bluetooth) {
-                alert('Bluetooth is not supported on this device/browser. Please use Chrome on Android or a compatible browser.');
-                return;
-            }
-
-            try {
-                document.getElementById('connectBtn').disabled = true;
-                document.getElementById('connectBtn').textContent = 'Connecting...';
-
-                // Request device
-                device = await navigator.bluetooth.requestDevice({
-                    filters: [{ name: 'TrainMonitor' }],
-                    optionalServices: [SERVICE_UUID]
-                });
-
-                // Connect to GATT server
-                const server = await device.gatt.connect();
-                service = await server.getPrimaryService(SERVICE_UUID);
-
-                // Get all characteristics
-                characteristics.voltage = await service.getCharacteristic(VOLTAGE_UUID);
-                characteristics.current = await service.getCharacteristic(CURRENT_UUID);
-                characteristics.power = await service.getCharacteristic(POWER_UUID);
-                characteristics.speed = await service.getCharacteristic(SPEED_UUID);
-                characteristics.distance = await service.getCharacteristic(DISTANCE_UUID);
-                characteristics.temperature = await service.getCharacteristic(TEMP_UUID);
-
-                // Start notifications
-                await characteristics.voltage.startNotifications();
-                await characteristics.current.startNotifications();
-                await characteristics.power.startNotifications();
-                await characteristics.speed.startNotifications();
-                await characteristics.distance.startNotifications();
-                await characteristics.temperature.startNotifications();
-
-                // Add event listeners
-                characteristics.voltage.addEventListener('characteristicvaluechanged', handleVoltage);
-                characteristics.current.addEventListener('characteristicvaluechanged', handleCurrent);
-                characteristics.power.addEventListener('characteristicvaluechanged', handlePower);
-                characteristics.speed.addEventListener('characteristicvaluechanged', handleSpeed);
-                characteristics.distance.addEventListener('characteristicvaluechanged', handleDistance);
-                characteristics.temperature.addEventListener('characteristicvaluechanged', handleTemperature);
-
-                // Handle disconnection
-                device.addEventListener('gattserverdisconnected', handleDisconnection);
-
-                updateConnectionStatus(true);
-                console.log('Connected to TrainMonitor!');
-
-            } catch (error) {
-                console.error('Connection failed:', error);
-                alert('Failed to connect to train monitor. Make sure the device is powered on and in range.');
-                updateConnectionStatus(false);
-            }
-        }
-
-        function handleVoltage(event) {
-            const value = event.target.value.getFloat32(0, true);
-            document.getElementById('voltageValue').textContent = value.toFixed(1);
-            updateChart('voltage', value);
-            updateGauge('voltage', value, 0, 20);
-            
-            // Add to voltage-distance correlation if we have current distance
-            if (currentDistance !== null) {
-                updateVoltageDistanceCorrelation(currentDistance, value);
-            }
-
-            // Record data and check alerts
-            recordDataPoint('voltage', value);
-            checkPerformanceAlerts('voltage', value);
-        }
-
-        function handleCurrent(event) {
-            const value = event.target.value.getFloat32(0, true);
-            document.getElementById('currentValue').textContent = value.toFixed(2);
-            updateChart('current', value);
-            recordDataPoint('current', value);
-            checkPerformanceAlerts('current', value);
-        }
-
-        function handlePower(event) {
-            const value = event.target.value.getFloat32(0, true);
-            document.getElementById('powerValue').textContent = value.toFixed(1);
-            updateChart('power', value);
-            updateGauge('power', value, 0, 50);
-            recordDataPoint('power', value);
-            checkPerformanceAlerts('power', value);
-        }
-
-        function handleSpeed(event) {
-            const value = event.target.value.getFloat32(0, true);
-            document.getElementById('speedValue').textContent = value.toFixed(1);
-            updateChart('speed', value);
-            updateGauge('speed', value, 0, 10);
-            recordDataPoint('speed', value);
-            checkPerformanceAlerts('speed', value);
-        }
-
-        function handleDistance(event) {
-            const value = event.target.value.getFloat32(0, true);
-            
-            // Detect lap completion (distance reset to near 0)
-            if (currentDistance > 12 && value < 6) { // If we had significant distance and now it's reset
-                completeLap();
-            } else if (currentDistance < 6 && value > 6 && lapCount === 0) {
-                // Starting first lap
-                startNewLap();
-            }
-            
-            currentDistance = value;
-            
-            // Track maximum distance reached in current lap
-            if (value > lapData.maxDistance) {
-                lapData.maxDistance = value;
-            }
-            
-            const feet = Math.floor(value / 12);
-            const inches = Math.floor(value % 12);
-            const distanceText = feet > 0 ? `${feet}ft ${inches}in` : `${inches}in`;
-            
-            document.querySelector('.lap-info div').textContent = `Lap: ${lapCount} | Distance: ${distanceText}`;
-            recordDataPoint('distance', value);
-        }
-
-        function handleTemperature(event) {
-            const value = event.target.value.getFloat32(0, true);
-            document.getElementById('tempValue').textContent = value.toFixed(1);
-            updateChart('temperature', value);
-            updateGauge('temperature', value, 0, 80);
-            recordDataPoint('temperature', value);
-            
-            // Show temperature warning
-            const warning = document.getElementById('tempWarning');
-            if (value > thresholds.maxTemp) {
-                warning.style.display = 'block';
-                showAlert(`High temperature detected: ${value.toFixed(1)}°C`, 'warning');
-            } else {
-                warning.style.display = 'none';
-            }
-            
-            checkPerformanceAlerts('temperature', value);
-        }
-
-        function updateChart(type, value) {
-            const now = new Date().toLocaleTimeString();
-            
-            // Add new data point
-            if (chartData.labels.length === 0 || chartData.labels[chartData.labels.length - 1] !== now) {
-                chartData.labels.push(now);
-                
-                // Initialize all arrays if this is a new timestamp
-                Object.keys(chartData).forEach(key => {
-                    if (key !== 'labels' && chartData[key].length < chartData.labels.length - 1) {
-                        chartData[key].push(0);
+        const voltageDistanceChart = new Chart(document.getElementById('voltageDistanceChart'), {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'Voltage vs Distance',
+                    data: lapData.distances.map((dist, i) => ({ x: dist, y: lapData.voltages[i] })),
+                    backgroundColor: 'rgba(255, 107, 107, 0.6)',
+                    borderColor: '#ff6b6b',
+                    borderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: { color: 'white' }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `Distance: ${context.parsed.x.toFixed(1)}" | Voltage: ${context.parsed.y.toFixed(2)}V`;
+                            }
+                        }
                     }
-                });
-            }
-            
-            // Update the specific data type
-            chartData[type][chartData.labels.length - 1] = value;
-            
-            // Keep only the last maxDataPoints
-            if (chartData.labels.length > maxDataPoints) {
-                chartData.labels.shift();
-                Object.keys(chartData).forEach(key => {
-                    if (key !== 'labels') {
-                        chartData[key].shift();
+                },
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom',
+                        title: {
+                            display: true,
+                            text: 'Distance from Lap Start (inches)',
+                            color: 'white'
+                        },
+                        ticks: { color: 'white' },
+                        grid: { color: 'rgba(255,255,255,0.2)' }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Voltage (V)',
+                            color: 'white'
+                        },
+                        ticks: { color: 'white' },
+                        grid: { color: 'rgba(255,255,255,0.2)' }
                     }
-                });
+                }
             }
-            
-            // Update charts
-            powerChart.update('none');
-            speedTempChart.update('none');
-        }
+        });
 
-        function updateVoltageDistanceCorrelation(distance, voltage) {
-            // Only add data points if we have reasonable values
-            if (distance >= 0 && voltage > 0) {
-                lapData.distances.push(distance);
-                lapData.voltages.push(voltage);
-                
-                // Update chart data
-                voltageDistanceChart.data.datasets[0].data = lapData.distances.map((dist, i) => ({
-                    x: dist,
-                    y: lapData.voltages[i]
-                }));
-                
-                // Update chart
-                voltageDistanceChart.update('none');
-            }
-        }
-
-        function handleDisconnection() {
-            updateConnectionStatus(false);
-            console.log('Disconnected from TrainMonitor');
-        }
-
-        function updateConnectionStatus(connected) {
-            isConnected = connected;
-            const statusDot = document.getElementById('statusDot');
-            const connectionText = document.getElementById('connectionText');
-            const connectBtn = document.getElementById('connectBtn');
-
-            if (connected) {
-                statusDot.classList.add('connected');
-                connectionText.textContent = 'Connected to TrainMonitor';
-                connectBtn.textContent = 'Connected';
-                connectBtn.disabled = true;
-            } else {
-                statusDot.classList.remove('connected');
-                connectionText.textContent = 'Disconnected';
-                connectBtn.textContent = 'Connect to Train';
-                connectBtn.disabled = false;
-            }
-        }
-
-        // Check for Bluetooth support on load
+        // ===== INITIALIZATION =====
         window.addEventListener('load', () => {
             if (!navigator.bluetooth) {
                 document.getElementById('connectBtn').textContent = 'Bluetooth Not Supported';
                 document.getElementById('connectBtn').disabled = true;
+                showAlert('Web Bluetooth is not supported on this browser. Please use Chrome on Android or Desktop.', 'warning');
             }
+            
+            // Enable debug panel with double-click on header
+            document.querySelector('.header').addEventListener('dblclick', () => {
+                const debugPanel = document.getElementById('debugPanel');
+                debugPanel.style.display = debugPanel.style.display === 'none' ? 'block' : 'none';
+            });
+            
+            debugLog('Train Monitor App initialized');
         });
     </script>
 </body>
